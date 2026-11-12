@@ -20,13 +20,15 @@ memory-enabled comparisons."*
    - **`db.experiment_status()`** → **PostgreSQL** `experiment_cohort`, the
      memory-enabled / memory-disabled split
 
-2. **`setData()`** — the screen then derives its four views in the browser from
-   that one response: the release gates, the failure clusters, the multilingual
-   cases and the contradiction cases.
+2. **`setData()`** — the screen then derives its views in the browser from that
+   response: release gates, failure clusters, multilingual cases, contradiction
+   cases, and whether the current account may start a run.
 
-The runs themselves are produced by `python scripts/run_golden_set.py` in the
-backend repository, which drives the live HTTP API case by case and writes the
-scores. This screen only reads them.
+3. An allowlisted quality admin can click **Run golden set**. The console sends
+   `POST /api/backend/quality/runs` → the backend authorizes the subject against
+   `QUALITY_ADMIN_SUBJECTS`, rejects overlapping runs, and starts the runner in
+   a background thread. The screen polls `GET /quality/runs` until it completes.
+   The command-line `python scripts/run_golden_set.py` remains available too.
 
 ---
 
@@ -143,6 +145,8 @@ than a special case — which is what makes it a fair baseline.
 | `score()` | same | Checks all five expectations of `abc.md:295` against the context package, which is what actually reaches a model. |
 | `clear_subject()` | same | Clears the synthetic subject before and after, so a run is repeatable. |
 | `db.golden_runs()`, `db.golden_cases()` | `memory/db.py` | The reads behind this screen. |
+| `POST /quality/runs` | `memory/api.py` | Starts a background evaluation only for allowlisted subjects. |
+| `QUALITY_ADMIN_SUBJECTS` | Render environment | Comma-separated subject IDs allowed to start runs; empty disables the button. |
 
 ---
 
@@ -153,3 +157,5 @@ python scripts/run_golden_set.py
 ```
 
 Takes about a minute. Exits non-zero if any case fails, so it can gate a build.
+Each run resets only synthetic golden-test subjects; use a staging database
+when possible.

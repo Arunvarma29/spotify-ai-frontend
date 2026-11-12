@@ -323,6 +323,8 @@ export type QualityRuns = {
   runs: GoldenRun[];
   cases: GoldenCase[];
   experiment: ExperimentStatus;
+  can_run: boolean;
+  is_running: boolean;
 };
 
 // The operational numbers the Overview screen shows. abc.md:339 names seven;

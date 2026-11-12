@@ -18,10 +18,10 @@
 // scripts/run_golden_set.py. Every case carries the five expectations
 // abc.md:295 requires, and its category is what lets failures be clustered.
 
-import { useEffect, useState } from "react";
-import { ApiFailure, get } from "@/lib/api";
+import { useCallback, useEffect, useState } from "react";
+import { ApiFailure, get, post } from "@/lib/api";
 import type { GoldenCase, QualityRuns } from "@/lib/types";
-import { Badge, Card, ErrorNote, Stat } from "@/components/ui";
+import { Badge, Button, Card, ErrorNote, Stat } from "@/components/ui";
 
 // The six categories abc.md:148 names, in plain words.
 const CATEGORY_LABEL: Record<string, string> = {
@@ -61,12 +61,50 @@ const GATES = [
 export default function QualityReviewPage() {
   const [data, setData] = useState<QualityRuns | null>(null);
   const [failure, setFailure] = useState<ApiFailure | null>(null);
+  const [starting, setStarting] = useState(false);
+  const [runMessage, setRunMessage] = useState("");
+
+  const refresh = useCallback(async () => {
+    try {
+      setData(await get<QualityRuns>("/quality/runs"));
+      setFailure(null);
+    } catch (error) {
+      setFailure(error as ApiFailure);
+    }
+  }, []);
 
   useEffect(() => {
-    get<QualityRuns>("/quality/runs")
-      .then(setData)
-      .catch((error) => setFailure(error as ApiFailure));
-  }, []);
+    void refresh();
+  }, [refresh]);
+
+  useEffect(() => {
+    if (!data?.is_running) return;
+    const timer = setInterval(() => void refresh(), 3000);
+    return () => clearInterval(timer);
+  }, [data?.is_running, refresh]);
+
+  async function runGoldenSet() {
+    if (
+      !window.confirm(
+        "Run the golden-set evaluation? It writes evaluation results and resets only synthetic golden-test accounts.",
+      )
+    ) {
+      return;
+    }
+
+    setStarting(true);
+    setFailure(null);
+    setRunMessage("");
+    try {
+      const result = await post<{ run_id: string; status: string }>("/quality/runs", {});
+      setRunMessage(`Run ${result.run_id} started. Results refresh automatically.`);
+      await refresh();
+    } catch (error) {
+      setFailure(error as ApiFailure);
+    } finally {
+      setStarting(false);
+    }
+  }
 
   const runs = data?.runs ?? [];
   const latest = runs[0] ?? null;
@@ -108,15 +146,35 @@ export default function QualityReviewPage() {
         />
       )}
 
+      {data?.can_run && (
+        <Card
+          title="Golden-set evaluation"
+          hint="Runs the synthetic quality cases against this deployment."
+          right={
+            <Button
+              onClick={runGoldenSet}
+              disabled={starting || data.is_running}
+            >
+              {data.is_running ? "Run in progress…" : starting ? "Starting…" : "Run golden set"}
+            </Button>
+          }
+        >
+          <p className="text-sm text-muted">
+            Each run records quality scores and resets only the dedicated synthetic
+            golden-test subjects. Use a staging deployment when available.
+          </p>
+          {runMessage && <p className="mt-2 text-xs text-accent">{runMessage}</p>}
+        </Card>
+      )}
+
       {data && !latest && (
         <Card title="No run yet">
           <p className="text-sm text-muted">
-            The golden set exists but has not been run. Run it from the backend
-            repository:
+            The golden set exists but has not been run.
+            {data.can_run
+              ? " Start it with the button above."
+              : " Ask an approved quality admin to start it."}
           </p>
-          <pre className="mt-2 rounded-lg border border-edge bg-base p-3 font-mono text-[11px] text-muted">
-            python scripts/run_golden_set.py
-          </pre>
         </Card>
       )}
 
@@ -127,7 +185,11 @@ export default function QualityReviewPage() {
             title="Latest run"
             hint={latest.run_id}
             right={
-              latest.failed === 0 ? (
+              data?.is_running ? (
+                <Badge tone="warn">running</Badge>
+              ) : latest.status !== "completed" ? (
+                <Badge tone="warn">incomplete</Badge>
+              ) : latest.failed === 0 ? (
                 <Badge tone="good">all cases passed</Badge>
               ) : (
                 <Badge tone="bad">{latest.failed} failed</Badge>
