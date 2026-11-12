@@ -30,26 +30,40 @@ export default function Nav() {
   if (path === "/login") return null;
 
   return (
-    <nav className="flex w-60 shrink-0 flex-col gap-1 border-r border-edge bg-panel p-3">
-      <div className="px-2 pb-3">
-        <div className="text-sm font-semibold text-ink">Memory console</div>
-        <div className="text-[11px] text-faint">operator views</div>
+    <nav
+      aria-label="Main navigation"
+      className="app-sidebar flex w-64 shrink-0 flex-col border-r p-3"
+    >
+      <div className="sidebar-brand">
+        <span className="brand-mark" aria-hidden="true">M</span>
+        <div>
+          <div className="text-sm font-semibold tracking-tight text-ink">Memory</div>
+          <div className="eyebrow mt-0.5">Operator console</div>
+        </div>
       </div>
 
-      {SCREENS.map((screen) => (
-        <Link
-          key={screen.href}
-          href={screen.href}
-          className={`rounded-lg px-2 py-2 transition ${
-            path === screen.href
-              ? "bg-raised text-ink"
-              : "text-muted hover:bg-raised/60 hover:text-ink"
-          }`}
-        >
-          <div className="text-sm font-medium">{screen.label}</div>
-          <div className="text-[11px] text-faint">{screen.note}</div>
-        </Link>
-      ))}
+      <div className="nav-section-label">Workspace</div>
+      <div className="sidebar-scroll">
+        {SCREENS.map((screen) => {
+          const active = path === screen.href;
+          return (
+            <Link
+              key={screen.href}
+              href={screen.href}
+              aria-current={active ? "page" : undefined}
+              className={`sidebar-link ${active ? "sidebar-link-active" : ""}`}
+            >
+              <span className="min-w-0">
+                <span className="nav-link-label block text-sm font-medium">{screen.label}</span>
+                <span className="sidebar-link-note mt-0.5 block text-[11px] text-faint">
+                  {screen.note}
+                </span>
+              </span>
+              {active && <span className="nav-link-arrow" aria-hidden="true">›</span>}
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

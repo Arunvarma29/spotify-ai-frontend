@@ -71,10 +71,15 @@ export default function SubjectBar() {
   if (path === "/login" || !who) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-3 border-b border-edge bg-panel px-4 py-2 text-sm">
-      <span className="text-muted">
+    <div className="subject-bar flex flex-wrap items-center gap-3 border-b px-4 py-2 text-sm sm:px-6">
+      <div className="subject-identity text-muted">
+        <span className="subject-avatar" aria-hidden="true">
+          {who.slice(0, 1).toUpperCase()}
+        </span>
+        <span>
         Logged in as <span className="font-semibold text-ink">{who}</span>
-      </span>
+        </span>
+      </div>
 
       {consent && (
         <>
@@ -84,6 +89,7 @@ export default function SubjectBar() {
           <select
             className={`${inputClass} w-auto py-1`}
             value={consent}
+            aria-label="Memory consent state"
             onChange={(event) => changeConsent(event.target.value as Consent)}
           >
             <option value="granted">Memory: on</option>
@@ -93,7 +99,9 @@ export default function SubjectBar() {
         </>
       )}
 
-      <span className="ml-auto text-[11px] text-faint">you only ever see your own data</span>
+      <span className="subject-note ml-auto text-[11px] text-faint">
+        Private workspace · only your data
+      </span>
       <Button variant="ghost" onClick={logout}>
         Log out
       </Button>

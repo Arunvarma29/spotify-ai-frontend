@@ -10,7 +10,13 @@
 // preference,' with the ability to correct or remove it."
 
 import type { Metadata } from "next";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dm-sans",
+});
 
 export const metadata: Metadata = {
   title: "Your memory controls",
@@ -25,14 +31,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className="min-h-full antialiased">
-        <header className="border-b border-edge bg-panel px-6 py-4">
-          <h1 className="text-base font-semibold text-ink">Your memory controls</h1>
-          <p className="mt-0.5 text-xs text-muted">
-            What Spotify&apos;s AI remembers about you, and how to change it.
+      <body className={`${dmSans.variable} min-h-full antialiased`}>
+        <header className="listener-header">
+          <div className="listener-brand">
+            <span className="brand-mark" aria-hidden="true">M</span>
+            <div>
+              <p className="eyebrow">Your personal space</p>
+              <h1>Your memory controls</h1>
+            </div>
+          </div>
+          <p className="listener-header-copy">
+            Review, correct, or remove what the assistant remembers about you.
+            You can pause memory whenever you like.
           </p>
         </header>
-        <main className="px-6 py-6">{children}</main>
+        <main className="listener-main">{children}</main>
       </body>
     </html>
   );

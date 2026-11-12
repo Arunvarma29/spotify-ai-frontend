@@ -114,78 +114,96 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto flex max-w-md flex-col gap-4">
-      {/* Whether the backend is awake - see the useEffect above. */}
-      <p className={`text-xs ${serverReady ? "text-accent" : "text-muted"}`}>
-        {serverReady
-          ? "Server ready."
-          : "Waking up the server (free hosting sleeps when idle) - you can type meanwhile..."}
-      </p>
-      {waitingNote && <p className="text-sm text-muted">{waitingNote}</p>}
-      <Card
-        title={mode === "login" ? "Log in" : "Create your account"}
-        hint={
-          mode === "login"
-            ? "See and control what Spotify's AI remembers about you."
-            : "Pick a user id nobody else has. Memory is switched on when you sign up - you can pause or switch it off any time."
-        }
-      >
-        <div className="flex flex-col gap-3">
-          <input
-            className={inputClass}
-            placeholder="user id, e.g. rahul_01"
-            autoComplete="username"
-            value={subjectId}
-            onChange={(event) => setSubjectId(event.target.value)}
-          />
-          <input
-            className={inputClass}
-            type="password"
-            placeholder={mode === "signup" ? "password (at least 8 characters)" : "password"}
-            autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            onKeyDown={(event) => event.key === "Enter" && submit()}
-          />
+    <div className="login-screen">
+      <section className="login-intro">
+        <p className="eyebrow login-kicker">Spotify AI · Memory</p>
+        <h1>
+          Your listening,
+          <span className="login-highlight"> remembered.</span>
+        </h1>
+        <p>
+          A clear view of what Spotify&apos;s AI remembers, how it shapes
+          responses, and what you can change.
+        </p>
+      </section>
 
-          {mode === "signup" && (
-            <div className="flex gap-2">
-              <input
-                className={inputClass}
-                placeholder="country, e.g. IN (optional)"
-                maxLength={2}
-                value={region}
-                onChange={(event) => setRegion(event.target.value.toUpperCase())}
-              />
-              <select
-                className={inputClass}
-                value={ageBand}
-                onChange={(event) => setAgeBand(event.target.value)}
-              >
-                <option value="adult">18 or older</option>
-                <option value="under_18">under 18</option>
-              </select>
-            </div>
-          )}
+      <div className="login-panel">
+        <p className="service-status" aria-live="polite">
+          <span className={`status-dot ${serverReady ? "status-dot-ready" : ""}`} />
+          {serverReady
+            ? "Memory service is ready"
+            : "Connecting to memory service…"}
+        </p>
+        {waitingNote && <p className="text-sm text-muted">{waitingNote}</p>}
+        <Card
+          title={mode === "login" ? "Welcome back" : "Create your account"}
+          hint={
+            mode === "login"
+              ? "Sign in to your operator workspace."
+              : "Choose a unique user id. Memory starts on, and you can pause or turn it off any time."
+          }
+        >
+          <div className="flex flex-col gap-3">
+            <input
+              className={inputClass}
+              placeholder="User ID"
+              aria-label="User ID"
+              autoComplete="username"
+              value={subjectId}
+              onChange={(event) => setSubjectId(event.target.value)}
+            />
+            <input
+              className={inputClass}
+              type="password"
+              placeholder={mode === "signup" ? "Password (at least 8 characters)" : "Password"}
+              aria-label="Password"
+              autoComplete={mode === "signup" ? "new-password" : "current-password"}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              onKeyDown={(event) => event.key === "Enter" && submit()}
+            />
 
-          <Button onClick={submit} disabled={busy || !subjectId.trim() || !password}>
-            {busy ? "Please wait..." : mode === "login" ? "Log in" : "Sign up"}
-          </Button>
+            {mode === "signup" && (
+              <div className="flex gap-2">
+                <input
+                  className={inputClass}
+                  placeholder="Country (optional)"
+                  aria-label="Country"
+                  maxLength={2}
+                  value={region}
+                  onChange={(event) => setRegion(event.target.value.toUpperCase())}
+                />
+                <select
+                  className={inputClass}
+                  aria-label="Age band"
+                  value={ageBand}
+                  onChange={(event) => setAgeBand(event.target.value)}
+                >
+                  <option value="adult">18 or older</option>
+                  <option value="under_18">under 18</option>
+                </select>
+              </div>
+            )}
 
-          <button
-            type="button"
-            className="text-left text-xs text-muted underline"
-            onClick={() => {
-              setMode(mode === "login" ? "signup" : "login");
-              setProblem(null);
-            }}
-          >
-            {mode === "login" ? "New here? Create an account" : "Already have an account? Log in"}
-          </button>
-        </div>
-      </Card>
+            <Button onClick={submit} disabled={busy || !subjectId.trim() || !password}>
+              {busy ? "Please wait..." : mode === "login" ? "Log in" : "Create account"}
+            </Button>
 
-      {problem && <ErrorNote code={problem.code} message={problem.message} correlationId="" />}
+            <button
+              type="button"
+              className="rounded-lg py-2 text-left text-xs text-muted underline decoration-edge underline-offset-4 transition hover:text-ink"
+              onClick={() => {
+                setMode(mode === "login" ? "signup" : "login");
+                setProblem(null);
+              }}
+            >
+              {mode === "login" ? "New here? Create an account" : "Already registered? Log in"}
+            </button>
+          </div>
+        </Card>
+
+        {problem && <ErrorNote code={problem.code} message={problem.message} correlationId="" />}
+      </div>
     </div>
   );
 }

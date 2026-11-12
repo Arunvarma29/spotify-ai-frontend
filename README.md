@@ -4,8 +4,8 @@ The web app for the governed memory system: log in, tell Spotify's AI what
 you like, and see exactly what it remembers, how it ranks it, and what reaches
 the model - for your own account only.
 
-**Backend:** https://github.com/omsemwal/spotify-personalized-ai
-**Live app:** https://spotifyfrontend11.netlify.app
+**Backend:** https://github.com/Arunvarma29/spotify-ai-frontend
+**Live app:** https://spotifpersonalizeai.netlify.app/login
 
 Stack is `abc.md:200`: *Next.js, React, Tailwind CSS*.
 
@@ -101,13 +101,28 @@ repository: `python scripts/run_golden_set.py`.
 
 ## Deploying
 
-`netlify.toml` builds `apps/memory-console` on Netlify (Vercel also works).
-Set two environment variables in the site settings:
+Deploy the apps as **two separate Netlify sites** from this repository. For
+each site, set its Base directory in Netlify under
+**Project configuration → Build & deploy → Build settings**:
+
+| Netlify site | Base directory |
+|---|---|
+| Operator console | `apps/memory-console` |
+| Listener controls | `apps/memory-controls` |
+
+The shared root `netlify.toml` supplies the build command (`npm run build`),
+publish directory (`.next`), and Next.js plugin. Set these environment
+variables in **both** Netlify sites:
 
 | Variable | Value |
 |---|---|
-| `MEMORY_API_BASE_URL` | the deployed backend, e.g. `https://memory-api.onrender.com` |
+| `MEMORY_API_BASE_URL` | The deployed backend's base URL, e.g. `https://memory-api.onrender.com` |
 | `MEMORY_JWT_SECRET` | the same secret the backend uses |
+
+The local `.env.local` files are not deployed to Netlify. Configure the
+variables in each site's Netlify settings so its server-side API routes can
+reach the backend. Each app will have its own Netlify URL; you can add custom
+domains or subdomains to the two sites if desired.
 
 ---
 

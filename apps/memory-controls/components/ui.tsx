@@ -22,17 +22,17 @@ export function Card({
   children: ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-edge bg-panel">
+    <section className="app-card rounded-2xl border border-edge">
       {title && (
-        <header className="flex items-start justify-between gap-4 border-b border-edge px-4 py-3">
+        <header className="card-heading flex items-start justify-between gap-4 border-b border-edge px-5 py-4">
           <div>
-            <h2 className="text-sm font-semibold text-ink">{title}</h2>
-            {hint && <p className="mt-0.5 text-xs text-faint">{hint}</p>}
+            <h2 className="text-sm font-semibold tracking-tight text-ink">{title}</h2>
+            {hint && <p className="mt-1 text-xs leading-relaxed text-faint">{hint}</p>}
           </div>
           {right}
         </header>
       )}
-      <div className="p-4">{children}</div>
+      <div className="p-4 sm:p-5">{children}</div>
     </section>
   );
 }
@@ -49,7 +49,7 @@ export function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-medium text-muted">{label}</span>
+      <span className="mb-1.5 block text-xs font-medium text-muted">{label}</span>
       {children}
       {hint && <span className="mt-1 block text-xs text-faint">{hint}</span>}
     </label>
@@ -58,8 +58,8 @@ export function Field({
 
 // Shared look for text inputs, selects and textareas.
 export const inputClass =
-  "w-full rounded-lg border border-edge bg-raised px-3 py-2 text-sm text-ink " +
-  "placeholder:text-faint focus:border-accent focus:outline-none";
+  "w-full rounded-xl border border-edge bg-raised/80 px-3.5 py-2.5 text-sm text-ink " +
+  "placeholder:text-faint transition focus:border-accent focus:outline-none focus:ring-4 focus:ring-accent/10";
 
 // The primary action on a screen.
 export function Button({
@@ -77,14 +77,14 @@ export function Button({
 }) {
   const look =
     variant === "primary"
-      ? "bg-accent text-black hover:brightness-110"
-      : "border border-edge bg-raised text-ink hover:border-faint";
+      ? "bg-accent text-[#06120c] shadow-lg shadow-accent/10 hover:-translate-y-px hover:brightness-105 disabled:bg-raised disabled:text-muted disabled:shadow-none disabled:hover:translate-y-0 disabled:hover:brightness-100"
+      : "border border-edge bg-raised/70 text-ink hover:border-faint hover:bg-raised disabled:opacity-50";
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-lg px-4 py-2 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${look}`}
+      className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition duration-150 active:translate-y-0 disabled:cursor-not-allowed ${look}`}
     >
       {children}
     </button>
@@ -101,15 +101,15 @@ export function Badge({
   tone?: "neutral" | "good" | "warn" | "bad" | "info";
 }) {
   const tones = {
-    neutral: "border-edge text-muted",
-    good: "border-accent/40 text-accent",
-    warn: "border-warn/40 text-warn",
-    bad: "border-bad/40 text-bad",
-    info: "border-info/40 text-info",
+    neutral: "border-edge bg-white/[0.03] text-muted",
+    good: "border-accent/30 bg-accent/10 text-accent",
+    warn: "border-warn/30 bg-warn/10 text-warn",
+    bad: "border-bad/30 bg-bad/10 text-bad",
+    info: "border-info/30 bg-info/10 text-info",
   };
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium ${tones[tone]}`}
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[11px] font-medium ${tones[tone]}`}
     >
       {children}
     </span>
@@ -164,7 +164,7 @@ export function ErrorNote({
   correlationId?: string;
 }) {
   return (
-    <div className="rounded-lg border border-bad/40 bg-bad/10 px-3 py-2 text-sm">
+    <div className="rounded-xl border border-bad/30 bg-bad/10 px-4 py-3 text-sm">
       <div className="font-mono text-xs font-semibold text-bad">{code}</div>
       <p className="mt-1 text-muted wrap-anywhere">{message}</p>
       {correlationId && (
@@ -179,9 +179,9 @@ export function ErrorNote({
 // One number with a caption, for the counters across the top of a result.
 export function Stat({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="rounded-lg border border-edge bg-raised px-3 py-2">
-      <div className="text-lg font-semibold tabular-nums text-ink">{value}</div>
-      <div className="text-[11px] text-faint">{label}</div>
+    <div className="app-stat rounded-xl border border-edge px-3.5 py-3">
+      <div className="text-xl font-semibold tabular-nums tracking-tight text-ink">{value}</div>
+      <div className="mt-0.5 text-[11px] text-faint">{label}</div>
     </div>
   );
 }
