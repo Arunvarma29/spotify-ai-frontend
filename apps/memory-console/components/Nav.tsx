@@ -3,16 +3,16 @@
 // Why this file exists
 // ====================
 //
-// The sidebar. One entry per screen the requirement names, and nothing else.
+// The sidebar. It includes the seven operator screens and the listener controls.
 //
-// abc.md:339-345 lists seven screens for this console. All seven are here, in
-// the order the document lists them, so the sidebar can be read against the
-// requirement line by line.
+// abc.md:339-345 lists seven operator screens. They stay in the document's
+// order, followed by the listener-facing controls.
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// The seven screens of abc.md:339-345, in the document's own order.
+// The seven screens of abc.md:339-345, in the document's own order, followed
+// by the listener controls served by this same app and login.
 const SCREENS = [
   { href: "/", label: "Overview", note: "health, ingestion lag, rejections" },
   { href: "/memories", label: "Memory explorer", note: "one subject's memories" },
@@ -21,6 +21,7 @@ const SCREENS = [
   { href: "/policy", label: "Schema & policy", note: "allowed fields, retention" },
   { href: "/quality", label: "Quality review", note: "golden-set runs" },
   { href: "/trace", label: "Audit trace", note: "decisions behind a response" },
+  { href: "/my-memory", label: "Your memory controls", note: "review, change, pause, or remove" },
 ];
 
 export default function Nav() {

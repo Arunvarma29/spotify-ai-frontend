@@ -29,11 +29,11 @@ enforced: [how-authentication-works.doc.md](docs/how-authentication-works.doc.md
 
 ```
 apps/
-  memory-console/     the main app - login and the seven screens (use this one)
-  memory-controls/    the listener review page abc.md:253 names, same login
+  memory-console/     the main app - login, seven operator screens, and listener controls
+  memory-controls/    standalone listener review app; also available in the console
 ```
 
-### The seven screens (`apps/memory-console`)
+### The seven operator screens (`apps/memory-console`)
 
 Exactly the seven of `abc.md:339-345`, in the document's own order.
 
@@ -53,7 +53,9 @@ The top bar shows who is logged in, turns memory **on / paused / off**
 ### The listener page (`apps/memory-controls`)
 
 `abc.md:51` asks for five listener paths - review, correct, remove, pause, opt
-out. All five work here, in plain language, and also in the main app.
+out. All five work here, in plain language, and also in the main app. In the
+console, open **Your memory controls** in the sidebar. It uses the same login
+and deployment as the operator screens.
 
 ---
 
@@ -101,8 +103,11 @@ repository: `python scripts/run_golden_set.py`.
 
 ## Deploying
 
-Deploy the apps as **two separate Netlify sites** from this repository. For
-each site, set its Base directory in Netlify under
+For one login and one URL, deploy `apps/memory-console`; its **Your memory
+controls** sidebar item opens the listener controls at `/my-memory`.
+`apps/memory-controls` can still be deployed as a separate standalone site.
+If you deploy both apps as **two separate Netlify sites**, set each site's Base
+directory in Netlify under
 **Project configuration → Build & deploy → Build settings**:
 
 | Netlify site | Base directory |

@@ -38,8 +38,17 @@ export async function proxy(request: NextRequest) {
   return NextResponse.redirect(new URL("/login", request.url));
 }
 
-// Only the seven screens. The login page, the API routes (which answer
+// The console screens. The login page, the API routes (which answer
 // "Please log in" themselves) and static files are left alone.
 export const config = {
-  matcher: ["/", "/memories", "/context", "/corrections", "/policy", "/quality", "/trace"],
+  matcher: [
+    "/",
+    "/memories",
+    "/context",
+    "/corrections",
+    "/policy",
+    "/quality",
+    "/trace",
+    "/my-memory",
+  ],
 };
