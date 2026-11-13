@@ -63,7 +63,7 @@ and deployment as the operator screens.
 
 From the live site.
 
-| Context preview | Memory explorer |
+| Context preview | Memory Controls explorer |
 |---|---|
 | ![Context preview](docs/screenshots/01_context.png) | ![Memory explorer](docs/screenshots/02_memory_controls.png) |
 
