@@ -61,11 +61,11 @@ and deployment as the operator screens.
 
 ## Screenshots
 
-From the live site. All eight are in the backend repository's README.
+From the live site.
 
 | Context preview | Memory explorer |
 |---|---|
-| ![Context preview](https://raw.githubusercontent.com/Arunvarma29/spotify-ai-frontend/main/docs/screenshots/01_context.png) | ![Memory explorer](https://raw.githubusercontent.com/Arunvarma29/spotify-ai-frontend/main/docs/screenshots/02_memory_controls.png) |
+| ![Context preview](docs/screenshots/01_context.png) | ![Memory explorer](docs/screenshots/02_memory_controls.png) |
 
 ---
 
