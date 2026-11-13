@@ -4,3 +4,5 @@
 
 # Local environment
 .env.local
+
+.env

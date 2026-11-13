@@ -65,7 +65,7 @@ From the live site. All eight are in the backend repository's README.
 
 | Context preview | Memory explorer |
 |---|---|
-| ![Context preview](https://raw.githubusercontent.com/omsemwal/spotify-personalized-ai/main/docs/screenshots/02-context-preview.png) | ![Memory explorer](https://raw.githubusercontent.com/omsemwal/spotify-personalized-ai/main/docs/screenshots/03-memory-explorer.png) |
+| ![Context preview](https://raw.githubusercontent.com/Arunvarma29/spotify-ai-frontend/main/docs/screenshots/01_context.png) | ![Memory explorer](https://raw.githubusercontent.com/Arunvarma29/spotify-ai-frontend/main/docs/screenshots/02_memory_controls.png) |
 
 ---
 
